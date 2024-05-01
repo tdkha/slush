@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter} from 'next/navigation';
 import {SERVER_URL} from "../config.js";
+import { document } from "postcss";
 
 export default function DashboardComponent()
 {
@@ -84,7 +85,7 @@ export default function DashboardComponent()
 		fetchSeatMap();
 	}, []);
 	return (
-		<div className="w-full grid  grid-cols-3 gap-4  lg:w-2/3">
+		<div className="w-full flex flex-col md:grid  md:grid-cols-3 gap-4  lg:w-2/3">
 			<div className="bg-myglassblack py-4 px-8 flex flex-col gap-4 justify-center items-center">
 				<div className="bg-mygreen w-40 h-40 rounded-full relative"></div>
 				<iframe
@@ -95,11 +96,12 @@ export default function DashboardComponent()
 				<p className="text-mylightgreen">{fullname}</p>
 			</div>
 			<div className="col-span-2 bg-myglassblack flex flex-col gap-2 py-4 px-8 text-sm">
+				<div className="text-xl md:pb-2 text-mylightgreen">Information:</div>
 				<p>Phone: {phone}</p>
 				<p>Email: {email}</p>
 				<p>Location: Helsinki</p>
 			</div>
-			<div className="col-span-3 bg-myglassblack py-4 px-8">
+			<div className="md:col-span-3 bg-myglassblack py-4 px-8">
 				<div className="pb-4 text-xl text-mylightgreen">Seat Map:</div>
 				<div className="w-full flex flex-col justify-center items-center gap-4">
 					{seatMap.map((row, rowIndex) => (
@@ -122,8 +124,8 @@ export default function DashboardComponent()
 				</div>
 			</div>
 			{viewSelectedSeat && 
-				<div className="col-span-3 bg-myglassblack flex flex-col gap-2 py-4 px-8 text-sm">
-					<div className="text-xl pb-4 text-mylightgreen">Selected user info:</div>
+				<div className="md:col-span-3 bg-myglassblack flex flex-col gap-2 py-4 px-8 text-sm">
+					<div className="text-xl pb-2 md:pb-4 text-mylightgreen">Selected user info:</div>
 					<p>Name: {viewSelectedSeatInfo.firstname + viewSelectedSeatInfo.lastname}</p>
 					<p>Phone: {viewSelectedSeatInfo.phone}</p>
 					<p>Email: {viewSelectedSeatInfo.email}</p>
