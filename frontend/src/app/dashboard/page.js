@@ -20,16 +20,25 @@ export default function DashboardComponent()
 		let response;
 		let jsonData;
 
-		response = await fetch(`${SERVER_URL}/api/seat/map`,
+		try
+		{
+			response = await fetch(`${SERVER_URL}/api/seat/map`,
 			{
 				method: "GET",
 				credentials: "include",
 			}
 		);
-		jsonData = await response.json();
-		if (!jsonData)
-			return router.refresh();
-		setSeatMap(jsonData);
+			jsonData = await response.json();
+			if (!jsonData)
+				return router.refresh();
+			return setSeatMap(jsonData);
+		}
+		catch (error)
+		{
+			if (error.message = "Unauthorized")
+				return router.replace("/");
+
+		}
 	}
 
 	const handleSeatClick = (e) =>
@@ -85,7 +94,7 @@ export default function DashboardComponent()
 		fetchSeatMap();
 	}, []);
 	return (
-		<div className="w-full flex flex-col md:grid  md:grid-cols-3 gap-4  lg:w-2/3">
+		<div className="w-full flex flex-col md:grid  md:grid-cols-3 gap-4  lg:w-2/3 relative">
 			<div className="bg-myglassblack py-4 px-8 flex flex-col gap-4 justify-center items-center">
 				<div className="bg-mygreen w-40 h-40 rounded-full relative"></div>
 				<iframe
@@ -95,11 +104,14 @@ export default function DashboardComponent()
 				></iframe>
 				<p className="text-mylightgreen">{fullname}</p>
 			</div>
-			<div className="col-span-2 bg-myglassblack flex flex-col gap-2 py-4 px-8 text-sm">
+			<div className="col-span-2 bg-myglassblack flex flex-col justify-evenly gap-2 py-4 px-8 text-sm">
 				<div className="text-xl md:pb-2 text-mylightgreen">Information:</div>
 				<p>Phone: {phone}</p>
 				<p>Email: {email}</p>
 				<p>Location: Helsinki</p>
+				<div className="font-semibold text-2xl text-mylightgreen opacity-80 text-center">
+					Unavailable
+				</div>
 			</div>
 			<div className="md:col-span-3 bg-myglassblack py-4 px-8">
 				<div className="pb-4 text-xl text-mylightgreen">Seat Map:</div>
@@ -124,11 +136,21 @@ export default function DashboardComponent()
 				</div>
 			</div>
 			{viewSelectedSeat && 
-				<div className="md:col-span-3 bg-myglassblack flex flex-col gap-2 py-4 px-8 text-sm">
-					<div className="text-xl pb-2 md:pb-4 text-mylightgreen">Selected user info:</div>
-					<p>Name: {viewSelectedSeatInfo.firstname + viewSelectedSeatInfo.lastname}</p>
+				<div className="w-full h-full md:col-span-3 bg-myblack flex flex-col gap-2 justify-center items-center py-4 px-8 text-sm absolute">
+					<div className="font-semibold text-2xl pb-2 py-4 text-mylightgreen">Selected user info</div>
+					<div className="py-4 px-8 flex flex-col gap-4 justify-center items-center">
+						<div className="bg-mygreen w-40 h-40 rounded-full relative"></div>
+						<iframe
+							src="https://giphy.com/embed/ejBA3EywiDEmtbSxWO"
+							className="h-auto w-auto max-w-full absolute mb-4"
+							allowFullScreen
+						></iframe>
+						<p className="text-mylightgreen">{viewSelectedSeatInfo.firstname +" " + viewSelectedSeatInfo.lastname}</p>
+					</div>
+					
 					<p>Phone: {viewSelectedSeatInfo.phone}</p>
 					<p>Email: {viewSelectedSeatInfo.email}</p>
+					<button className="my-4 bg-mylightgreen hover:bg-mygreen text-black font-bold py-2 px-8 rounded-lg" onClick={(e) => setviewSelectedSeat(false)}>Close</button>
 				</div>
 			}
 		</div>
